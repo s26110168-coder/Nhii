@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pink Dream Portfolio | 我的網頁作品集</title>
+    <!-- 引入可愛與現代感 Google 字體 -->
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&family=Noto+Sans+TC:wght@400;700&display=swap" rel="stylesheet">
+    
+    <style>
+        /* === 全局樣式重置與甜美粉紅背景 === */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            /* 甜美柔和的粉紅漸層背景 */
+            background: linear-gradient(135deg, #ffeef8 0%, #ffd6e8 50%, #fec5bb 100%);
+            background-attachment: fixed;
+            color: #5c3d46;
+            font-family: 'Noto Sans TC', 'Fredoka', sans-serif;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 40px 20px;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* 背景飄浮可愛光暈裝飾 */
+        body::before, body::after {
+            content: '';
+            position: absolute;
+            width: 300px;
+            height: 300px;
+            border-radius: 50%;
+            background: rgba(255, 182, 193, 0.4);
+            filter: blur(80px);
+            z-index: 0;
+        }
+
+        body::before {
+            top: 10%;
+            left: 5%;
+        }
+
+        body::after {
+            bottom: 10%;
+            right: 5%;
+            background: rgba(255, 105, 180, 0.25);
+        }
+
+        /* 主容器 */
+        .container {
+            width: 100%;
+            max-width: 1100px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 35px;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* === 個人頭像與個人檔案區 === */
+        .profile-card {
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+        }
+
+        /* 大頭貼粉紅光暈與旋轉外圈動畫 */
+        .avatar-wrapper {
+            position: relative;
+            width: 130px;
+            height: 130px;
+            border-radius: 50%;
+            padding: 6px;
+            background: linear-gradient(45deg, #ff758c, #ff7eb3, #ffb3c6);
+            background-size: 200% 200%;
+            animation: pinkGlowRotate 4s ease infinite;
+            box-shadow: 0 10px 25px rgba(255, 105, 180, 0.4);
+            margin-bottom: 15px;
+        }
+
+        @keyframes pinkGlowRotate {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .avatar-img {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 4px solid #ffffff;
+            background-color: #fff0f5;
+        }
+
+        .user-name {
+            font-size: 2.2rem;
+            font-weight: 700;
+            letter-spacing: 1.5px;
+            color: #d63384;
+            text-shadow: 2px 2px 0px #ffffff, 0 0 15px rgba(255, 105, 180, 0.3);
+            margin-bottom: 5px;
+            font-family: 'Fredoka', 'Noto Sans TC', sans-serif;
+        }
+
+        .user-subtitle {
+            font-size: 0.95rem;
+            color: #ff4d6d;
+            letter-spacing: 2px;
+            font-weight: 600;
+            background: rgba(255, 255, 255, 0.6);
+            padding: 4px 16px;
+            border-radius: 20px;
+            backdrop-filter: blur(5px);
+            box-shadow: 0 2px 8px rgba(255, 182, 193, 0.3);
+        }
+
+        /* === 網格選單區 (16個按鈕) === */
+        .grid-menu {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr); /* 電腦版 4 欄 */
+            gap: 20px;
+            width: 100%;
+        }
+
+        /* 基礎按鈕卡片樣式 */
+        .card {
+            position: relative;
+            background: rgba(255, 255, 255, 0.7);
+            border: 2px solid rgba(255, 182, 193, 0.6);
+            border-radius: 18px;
+            padding: 22px 15px;
+            text-decoration: none;
+            color: #5c3d46;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 110px;
+            backdrop-filter: blur(10px);
+            transition: all 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            overflow: hidden;
+            box-shadow: 0 8px 15px rgba(255, 182, 193, 0.2);
+        }
+
+        /* === 已解鎖按鈕 (Unlocked Card) === */
+        .card.unlocked {
+            background: rgba(255, 255, 255, 0.85);
+            border-color: #ff85a2;
+            cursor: pointer;
+        }
+
+        .card.unlocked::before {
+            content: '';
+            position: absolute;
+            top: 0; left: -100%;
+            width: 100%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 182, 193, 0.4), transparent);
+            transition: 0.5s;
+        }
+
+        /* 已解鎖按鈕 Hover 酷炫粉紅懸浮動畫 */
+        .card.unlocked:hover {
+            transform: translateY(-8px) scale(1.04);
+            border-color: #ff4d6d;
+            background: #ffffff;
+            box-shadow: 0 12px 25px rgba(255, 77, 109, 0.35),
+                        0 0 15px rgba(255, 182, 193, 0.5);
+        }
+
+        .card.unlocked:hover::before {
+            left: 100%;
+        }
+
+        .card.unlocked .badge {
+            background-color: #ffe5ec;
+            color: #ff4d6d;
+            border: 1px solid #ff85a2;
+        }
+
+        .card.unlocked:hover .badge {
+            background-color: #ff4d6d;
+            color: #ffffff;
+            border-color: #ff4d6d;
+            box-shadow: 0 0 10px rgba(255, 77, 109, 0.5);
+        }
+
+        .card.unlocked .title {
+            color: #4a2833;
+            font-weight: 700;
+        }
+
+        /* === 未解鎖按鈕 (Locked Card) === */
+        .card.locked {
+            background: rgba(230, 225, 230, 0.45);
+            border-color: rgba(200, 190, 200, 0.4);
+            color: #9e8e95;
+            cursor: not-allowed;
+            filter: grayscale(40%);
+        }
+
+        /* 未解鎖按鈕 Hover 可愛鎖定彈跳抖動 */
+        .card.locked:hover {
+            border-color: #d63384;
+            animation: pinkShake 0.4s ease-in-out;
+            box-shadow: 0 0 12px rgba(214, 51, 132, 0.25);
+            background: rgba(240, 230, 235, 0.6);
+        }
+
+        /* 鎖定抖動效果 */
+        @keyframes pinkShake {
+            0%, 100% { transform: translateX(0); }
+            20% { transform: translateX(-5px); }
+            40% { transform: translateX(5px); }
+            60% { transform: translateX(-3px); }
+            80% { transform: translateX(3px); }
+        }
+
+        /* 標籤與標題樣式 */
+        .badge {
+            font-family: 'Fredoka', sans-serif;
+            font-size: 0.75rem;
+            font-weight: 600;
+            padding: 3px 10px;
+            border-radius: 12px;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: all 0.3s;
+        }
+
+        .card.locked .badge {
+            background: rgba(0, 0, 0, 0.05);
+            color: #a09098;
+            border: 1px solid rgba(0, 0, 0, 0.08);
+        }
+
+        .title {
+            font-size: 0.95rem;
+            text-align: center;
+            line-height: 1.4;
+            word-break: break-all;
+        }
+
+        .lock-icon {
+            font-size: 1.1rem;
+            margin-right: 4px;
+        }
+
+        /* === RWD 響應式微調 (手機版) === */
+        @media (max-width: 900px) {
+            .grid-menu {
+                grid-template-columns: repeat(3, 1fr); /* 平板 3 欄 */
+            }
+        }
+
+        @media (max-width: 600px) {
+            .grid-menu {
+                grid-template-columns: repeat(2, 1fr); /* 手機 2 欄，排列整齊 */
+                gap: 12px;
+            }
+
+            .user-name {
+                font-size: 1.8rem;
+            }
+
+            .card {
+                padding: 16px 10px;
+                min-height: 95px;
+                border-radius: 14px;
+            }
+
+            .title {
+                font-size: 0.85rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        
+        <!-- 中央個人資料 -->
+        <header class="profile-card">
+            <div class="avatar-wrapper">
+                <!-- 預設假圖片 (DiceBear 可愛粉色系風格 API) -->
+                <img class="avatar-img" src="https://i.postimg.cc/Dw6RbN5G/unnamed.jpg" alt="大頭貼">
+            </div>
+            <h1 class="user-name">阮氏燕兒</h1>
+            <p class="user-subtitle">✨ Web Dev Quest 2026 ✨</p>
+        </header>
+
+        <!-- 16 個闖關按鈕選單 -->
+        <main class="grid-menu">
+            
+            <!-- Week 1 (已解鎖) -->
+            <a href="w1/index.html" class="card unlocked">
+                <span class="badge">MISSION 01</span>
+                <span class="title">Week 1- 數位名片</span>
+            </a>
+
+            <!-- Week 2 (已解鎖) -->
+            <a href="w2/index.html" class="card unlocked">
+                <span class="badge">MISSION 02</span>
+                <span class="title">Week 2-今天吃甚麼？</span>
+            </a>
+
+            <!-- Week 3 ~ 16 (未解鎖) -->
+            <div class="card locked">
+                <span class="badge">LOCKED</span>
+                <span class="title"><span class="lock-icon">🔒</span> Week 3</span>
+            </div>
+
+            <div class="card locked">
+                <span class="badge">LOCKED</span>
+                <span class="title"><span class="lock-icon">🔒</span> Week 4</span>
+            </div>
+
+            <div class="card locked">
+                <span class="badge">LOCKED</span>
+                <span class="title"><span class="lock-icon">🔒</span> Week 5</span>
+            </div>
+
+            <div class="card locked">
+                <span class="badge">LOCKED</span>
+                <span class="title"><span class="lock-icon">🔒</span> Week 6</span>
+            </div>
+
+            <div class="card locked">
+                <span class="badge">LOCKED</span>
+                <span class="title"><span class="lock-icon">🔒</span> Week 7</span>
+            </div>
+
+            <div class="card locked">
+                <span class="badge">LOCKED</span>
+                <span class="title"><span class="lock-icon">🔒</span> Week 8</span>
+            </div>
+
+            <div class="card locked">
+                <span class="badge">LOCKED</span>
+                <span class="title"><span class="lock-icon">🔒</span> Week 9</span>
+            </div>
+
+            <div class="card locked">
+                <span class="badge">LOCKED</span>
+                <span class="title"><span class="lock-icon">🔒</span> Week 10</span>
+            </div>
+
+            <div class="card locked">
+                <span class="badge">LOCKED</span>
+                <span class="title"><span class="lock-icon">🔒</span> Week 11</span>
+            </div>
+
+            <div class="card locked">
+                <span class="badge">LOCKED</span>
+                <span class="title"><span class="lock-icon">🔒</span> Week 12</span>
+            </div>
+
+            <div class="card locked">
+                <span class="badge">LOCKED</span>
+                <span class="title"><span class="lock-icon">🔒</span> Week 13</span>
+            </div>
+
+            <div class="card locked">
+                <span class="badge">LOCKED</span>
+                <span class="title"><span class="lock-icon">🔒</span> Week 14</span>
+            </div>
+
+            <div class="card locked">
+                <span class="badge">LOCKED</span>
+                <span class="title"><span class="lock-icon">🔒</span> Week 15</span>
+            </div>
+
+            <div class="card locked">
+                <span class="badge">LOCKED</span>
+                <span class="title"><span class="lock-icon">🔒</span> Week 16</span>
+            </div>
+
+        </main>
+
+    </div>
+
+</body>
+</html>
