@@ -1,185 +1,405 @@
 <!DOCTYPE html>
 <html lang="zh-TW">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pink Dream Portfolio | 我的網頁作品集</title>
-    <!-- 引入可愛與現代感 Google 字體 -->
-    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&family=Noto+Sans+TC:wght@400;700&display=swap" rel="stylesheet">
-    
-    <style>
-        /* === 全局樣式重置與甜美粉紅背景 === */
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>朋友對我的悄悄話留言板 💕</title>
+  
+  <!-- 引入 Google 可愛圓潤字型 (Quicksand & Noto Sans TC) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;600;800&family=Quicksand:wght@500;700&display=swap" rel="stylesheet">
+
+  <style>
+    /* ==========================================================================
+       1. 全域變數與基本設定 (日系可愛粉彩風格)
+       ========================================================================== */
+    :root {
+      --bg-color: #fdf0f5;
+      --card-bg: #ffffff;
+      --primary-color: #ff85a2;
+      --secondary-color: #fbb1bd;
+      --accent-color: #ffd1dc;
+      --text-color: #5c4b51;
+      --text-muted: #a39399;
+      --card-shadow: 0 10px 25px rgba(255, 133, 162, 0.15);
+      --hover-shadow: 0 15px 30px rgba(255, 133, 162, 0.28);
+      --radius-lg: 24px;
+      --radius-sm: 12px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Quicksand', 'Noto Sans TC', sans-serif;
+      background-color: var(--bg-color);
+      /* 點點背景裝飾 */
+      background-image: radial-gradient(#ffb6c1 1.5px, transparent 1.5px);
+      background-size: 24px 24px;
+      color: var(--text-color);
+      min-height: 100vh;
+      padding: 2rem 1rem;
+    }
+
+    /* ==========================================================================
+       2. 頁首 Header 區塊
+       ========================================================================== */
+    header {
+      text-align: center;
+      margin-bottom: 2.5rem;
+    }
+
+    header h1 {
+      font-size: 2.2rem;
+      font-weight: 800;
+      color: #ff5c8a;
+      text-shadow: 2px 2px 0px #fff, 4px 4px 0px #ffd1dc;
+      display: inline-block;
+      margin-bottom: 0.5rem;
+    }
+
+    header p {
+      color: var(--text-muted);
+      font-size: 1rem;
+      font-weight: 600;
+    }
+
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    /* ==========================================================================
+       3. 酷炫可愛 Loader 載入動畫
+       ========================================================================== */
+    #loader {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 250px;
+    }
+
+    .heart-loader {
+      width: 50px;
+      height: 50px;
+      background-color: var(--primary-color);
+      display: inline-block;
+      animation: heartbeat 1.2s infinite ease-in-out;
+      transform: rotate(45deg);
+      position: relative;
+      border-radius: 8px;
+    }
+
+    .heart-loader::before,
+    .heart-loader::after {
+      content: "";
+      width: 50px;
+      height: 50px;
+      background-color: var(--primary-color);
+      border-radius: 50%;
+      position: absolute;
+    }
+
+    .heart-loader::before {
+      top: -25px;
+      left: 0;
+    }
+
+    .heart-loader::after {
+      left: -25px;
+      top: 0;
+    }
+
+    @keyframes heartbeat {
+      0% { transform: rotate(45deg) scale(0.8); }
+      50% { transform: rotate(45deg) scale(1.15); }
+      100% { transform: rotate(45deg) scale(0.8); }
+    }
+
+    .loading-text {
+      margin-top: 2rem;
+      font-weight: 700;
+      color: var(--primary-color);
+      letter-spacing: 1px;
+      animation: blink 1.5s infinite;
+    }
+
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.4; }
+    }
+
+    /* ==========================================================================
+       4. CSS Masonry (瀑布流卡片牆)
+       ========================================================================== */
+    .masonry-grid {
+      column-count: 3;
+      column-gap: 1.5rem;
+      display: none; /* 載入完成後會經由 JS 切換為 block */
+    }
+
+    /* 響應式調整 */
+    @media (max-width: 900px) {
+      .masonry-grid {
+        column-count: 2;
+      }
+    }
+    @media (max-width: 600px) {
+      .masonry-grid {
+        column-count: 1;
+      }
+    }
+
+    /* ==========================================================================
+       5. 卡片細節與特效
+       ========================================================================== */
+    .card {
+      background: var(--card-bg);
+      border-radius: var(--radius-lg);
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+      break-inside: avoid; /* 避免卡片在瀑布流中被斷開 */
+      box-shadow: var(--card-shadow);
+      border: 3px solid #fff;
+      transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .card:hover {
+      transform: translateY(-8px) rotate(1deg);
+      box-shadow: var(--hover-shadow);
+    }
+
+    /* 隨機背景微調 - 增加豐富感 */
+    .card:nth-child(3n+1) { border-color: #ffe5ec; }
+    .card:nth-child(3n+2) { border-color: #e8f0fe; }
+    .card:nth-child(3n+3) { border-color: #fbf7d5; }
+
+    /* 卡片 Header (頭像與暱稱) */
+    .card-header {
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+      margin-bottom: 1rem;
+    }
+
+    .avatar {
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--secondary-color), var(--primary-color));
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 1.1rem;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+      flex-shrink: 0;
+    }
+
+    .author-info {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .author-name {
+      font-weight: 700;
+      font-size: 1.05rem;
+      color: var(--text-color);
+    }
+
+    .timestamp {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+
+    /* 卡片留言內容 */
+    .card-content {
+      font-size: 0.95rem;
+      line-height: 1.6;
+      color: #4a3e3d;
+      white-space: pre-wrap; /* 保持留言換行格式 */
+      word-break: break-word;
+    }
+
+    /* 隨機可愛紙條裝飾貼紙 */
+    .card::after {
+      content: '✨';
+      position: absolute;
+      top: 10px;
+      right: 15px;
+      font-size: 0.8rem;
+      opacity: 0.5;
+    }
+
+    /* 錯誤訊息 */
+    .error-msg {
+      text-align: center;
+      color: #ff4d6d;
+      font-weight: bold;
+      padding: 2rem;
+      background: white;
+      border-radius: var(--radius-lg);
+      box-shadow: var(--card-shadow);
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <header>
+      <h1>🌸 朋友對我的悄悄話留言板 🌸</h1>
+      <p>收集每一份來自朋友的甜蜜祝福與真心話 ✨</p>
+    </header>
+
+    <!-- 載入中動畫 -->
+    <div id="loader">
+      <div class="heart-loader"></div>
+      <div class="loading-text">讀取留言中... 💕</div>
+    </div>
+
+    <!-- 瀑布流卡片牆 -->
+    <div id="masonry-grid" class="masonry-grid"></div>
+  </div>
+
+  <script>
+    /**
+     * 高效能且安全的 CSV 解析器 (能夠精確處理欄位內包含雙引號與逗號的情況)
+     */
+    function parseCSV(text) {
+      const lines = [];
+      let row = [];
+      let currentVal = '';
+      let insideQuote = false;
+
+      for (let i = 0; i < text.length; i++) {
+        const char = text[i];
+        const nextChar = text[i + 1];
+
+        if (char === '"') {
+          if (insideQuote && nextChar === '"') {
+            currentVal += '"';
+            i++; // 跳過下一個轉義引號
+          } else {
+            insideQuote = !insideQuote; // 切換引號狀態
+          }
+        } else if (char === ',' && !insideQuote) {
+          row.push(currentVal.trim());
+          currentVal = '';
+        } else if ((char === '\r' || char === '\n') && !insideQuote) {
+          if (char === '\r' && nextChar === '\n') {
+            i++; // 處理 Windows 換行符 \r\n
+          }
+          row.push(currentVal.trim());
+          if (row.length > 1 || row[0] !== '') {
+            lines.push(row);
+          }
+          row = [];
+          currentVal = '';
+        } else {
+          currentVal += char;
+        }
+      }
+
+      if (currentVal || row.length > 0) {
+        row.push(currentVal.trim());
+        lines.push(row);
+      }
+
+      return lines;
+    }
+
+    /**
+     * XSS 攻擊防護，將字串轉義為安全的 HTML 格式
+     */
+    function escapeHTML(str) {
+      if (!str) return '';
+      return str
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+    }
+
+    /**
+     * 主程式：Fetch 資料並渲染 DOM
+     */
+    async function initBoard() {
+      const csvUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSd6jKBWOpFdeFlYDKF-tTiwu1xTweAVgHv1BRtgz-Q-iy0Wy5TCQ0j3dx_B3_NDopgGpMefKTEBxgn/pub?output=csv';
+      const loader = document.getElementById('loader');
+      const grid = document.getElementById('masonry-grid');
+
+      try {
+        const response = await fetch(csvUrl);
+        if (!response.ok) throw new Error('網路回應不成功');
+        
+        const rawCSV = await response.text();
+        const parsedRows = parseCSV(rawCSV);
+
+        // 如果第一列是標頭 (例如包含「時間戳記」)，則將其移除
+        if (parsedRows.length > 0 && parsedRows[0][0].includes('時間')) {
+          parsedRows.shift();
         }
 
-        body {
-            /* 甜美柔和的粉紅漸層背景 */
-            background: linear-gradient(135deg, #ffeef8 0%, #ffd6e8 50%, #fec5bb 100%);
-            background-attachment: fixed;
-            color: #5c3d46;
-            font-family: 'Noto Sans TC', 'Fredoka', sans-serif;
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 40px 20px;
-            position: relative;
-            overflow-x: hidden;
+        // 隱藏 Loader，顯示 Grid
+        loader.style.display = 'none';
+        grid.style.display = 'block';
+
+        if (parsedRows.length === 0) {
+          grid.innerHTML = '<div class="error-msg">目前還沒有留言唷！快邀請朋友來留言吧 💌</div>';
+          return;
         }
 
-        /* 背景飄浮可愛光暈裝飾 */
-        body::before, body::after {
-            content: '';
-            position: absolute;
-            width: 300px;
-            height: 300px;
-            border-radius: 50%;
-            background: rgba(255, 182, 193, 0.4);
-            filter: blur(80px);
-            z-index: 0;
-        }
+        // 動態生成 HTML 節點
+        const fragment = document.createDocumentFragment();
 
-        body::before {
-            top: 10%;
-            left: 5%;
-        }
+        parsedRows.forEach(row => {
+          // 解構欄位：[時間戳記, 名字, 悄悄話]
+          const [timestamp = '', name = '匿名朋友', message = ''] = row;
 
-        body::after {
-            bottom: 10%;
-            right: 5%;
-            background: rgba(255, 105, 180, 0.25);
-        }
+          // 濾掉空白卡片
+          if (!message && !name) return;
 
-        /* 主容器 */
-        .container {
-            width: 100%;
-            max-width: 1100px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 35px;
-            position: relative;
-            z-index: 1;
-        }
+          // 取名字的第一個字作為預設 Avator 標誌
+          const firstLetter = escapeHTML(name.trim().charAt(0) || '🌸');
 
-        /* === 個人頭像與個人檔案區 === */
-        .profile-card {
-            text-align: center;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            position: relative;
-        }
+          const card = document.createElement('div');
+          card.className = 'card';
+          card.innerHTML = `
+            <div class="card-header">
+              <div class="avatar">${firstLetter}</div>
+              <div class="author-info">
+                <span class="author-name">${escapeHTML(name)}</span>
+                <span class="timestamp">${escapeHTML(timestamp)}</span>
+              </div>
+            </div>
+            <div class="card-content">${escapeHTML(message)}</div>
+          `;
 
-        /* 大頭貼粉紅光暈與旋轉外圈動畫 */
-        .avatar-wrapper {
-            position: relative;
-            width: 130px;
-            height: 130px;
-            border-radius: 50%;
-            padding: 6px;
-            background: linear-gradient(45deg, #ff758c, #ff7eb3, #ffb3c6);
-            background-size: 200% 200%;
-            animation: pinkGlowRotate 4s ease infinite;
-            box-shadow: 0 10px 25px rgba(255, 105, 180, 0.4);
-            margin-bottom: 15px;
-        }
+          fragment.appendChild(card);
+        });
 
-        @keyframes pinkGlowRotate {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
-        }
+        grid.appendChild(fragment);
 
-        .avatar-img {
-            width: 100%;
-            height: 100%;
-            border-radius: 50%;
-            object-fit: cover;
-            border: 4px solid #ffffff;
-            background-color: #fff0f5;
-        }
+      } catch (error) {
+        console.error('抓取資料時發生錯誤:', error);
+        loader.style.display = 'none';
+        grid.style.display = 'block';
+        grid.innerHTML = `<div class="error-msg">😿 讀取失敗，請確認試算表網址權限或網路狀態！<br>(${escapeHTML(error.message)})</div>`;
+      }
+    }
 
-        .user-name {
-            font-size: 2.2rem;
-            font-weight: 700;
-            letter-spacing: 1.5px;
-            color: #d63384;
-            text-shadow: 2px 2px 0px #ffffff, 0 0 15px rgba(255, 105, 180, 0.3);
-            margin-bottom: 5px;
-            font-family: 'Fredoka', 'Noto Sans TC', sans-serif;
-        }
-
-        .user-subtitle {
-            font-size: 0.95rem;
-            color: #ff4d6d;
-            letter-spacing: 2px;
-            font-weight: 600;
-            background: rgba(255, 255, 255, 0.6);
-            padding: 4px 16px;
-            border-radius: 20px;
-            backdrop-filter: blur(5px);
-            box-shadow: 0 2px 8px rgba(255, 182, 193, 0.3);
-        }
-
-        /* === 網格選單區 (16個按鈕) === */
-        .grid-menu {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr); /* 電腦版 4 欄 */
-            gap: 20px;
-            width: 100%;
-        }
-
-        /* 基礎按鈕卡片樣式 */
-        .card {
-            position: relative;
-            background: rgba(255, 255, 255, 0.7);
-            border: 2px solid rgba(255, 182, 193, 0.6);
-            border-radius: 18px;
-            padding: 22px 15px;
-            text-decoration: none;
-            color: #5c3d46;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            min-height: 110px;
-            backdrop-filter: blur(10px);
-            transition: all 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            overflow: hidden;
-            box-shadow: 0 8px 15px rgba(255, 182, 193, 0.2);
-        }
-
-        /* === 已解鎖按鈕 (Unlocked Card) === */
-        .card.unlocked {
-            background: rgba(255, 255, 255, 0.85);
-            border-color: #ff85a2;
-            cursor: pointer;
-        }
-
-        .card.unlocked::before {
-            content: '';
-            position: absolute;
-            top: 0; left: -100%;
-            width: 100%; height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 182, 193, 0.4), transparent);
-            transition: 0.5s;
-        }
-
-        /* 已解鎖按鈕 Hover 酷炫粉紅懸浮動畫 */
-        .card.unlocked:hover {
-            transform: translateY(-8px) scale(1.04);
-            border-color: #ff4d6d;
-            background: #ffffff;
-            box-shadow: 0 12px 25px rgba(255, 77, 109, 0.35),
-                        0 0 15px rgba(255, 182, 193, 0.5);
-        }
-
-        .card.unlocked:hover::before {
-            left: 100%;
-        }
-
-        .card
+    // 當 DOM 載入完成後執行
+    document.addEventListener('DOMContentLoaded', initBoard);
+  </script>
+</body>
+</html>
