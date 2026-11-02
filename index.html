@@ -299,6 +299,24 @@ Look closely at
                 font-size: 0.85rem;
             }
         }
+
+        /* === CSS 練習題樣式：按鈕與 Hover 變紅效果 === */
+        a[href="#"] {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #ffffff;
+            color: #5c3d46;
+            text-decoration: none;
+            border: 2px solid #ff85a2;
+            border-radius: 12px;
+            font-weight: bold;
+            transition: color 0.3s ease, background-color 0.3s ease;
+        }
+
+        a[href="#"]:hover {
+            color: red;
+            background-color: #ffeef8;
+        }
     </style>
 </head>
 <body>
@@ -308,7 +326,6 @@ Look closely at
         <!-- 中央個人資料 -->
         <header class="profile-card">
             <div class="avatar-wrapper">
-                <!-- 預設假圖片 (DiceBear 可愛粉色系風格 API) -->
                 <img class="avatar-img" src="https://i.postimg.cc/cJ0VCxH6/50764854-374C-44E6-B625-8FCCB9C0333A-(3).jpg" alt="大頭貼">
             </div>
             <h1 class="user-name">阮氏燕兒</h1>
@@ -330,12 +347,13 @@ Look closely at
                 <span class="title">Week 2-今天吃甚麼？</span>
             </a>
 
-            <!-- Week 3 ~ 16 (未解鎖) -->
-            <div class="card locked">
-                <span class="badge">LOCKED</span>
-                <span class="title"><span class="lock-icon">🔒</span> Week 3</span>
-            </div>
+            <!-- Week 3 (已解鎖) -->
+            <a href="w3/index.html" class="card unlocked">
+                <span class="badge">MISSION 03</span>
+                <span class="title">Week 3- 迷因產生器</span>
+            </a>
 
+            <!-- Week 4 ~ 16 (未解鎖) -->
             <div class="card locked">
                 <span class="badge">LOCKED</span>
                 <span class="title"><span class="lock-icon">🔒</span> Week 4</span>
